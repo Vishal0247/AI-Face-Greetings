@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Face Greeting System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="dot"></div>
+                <h1>AI Greet</h1>
+            </div>
+            <div class="controls">
+                <a href="/dashboard" class="btn" style="padding: 6px 14px; font-size: 0.85rem;">⚙ Admin Dashboard</a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Camera Feed Area -->
+            <div class="camera-wrapper">
+                <div class="camera-frame">
+                    <!-- The local webcam stream -->
+                    <video id="videoFeed" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1);"></video>
+                    
+                    <!-- Overlay canvas to draw the green circle and boxes -->
+                    <canvas id="overlayCanvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform: scaleX(-1); z-index: 10;"></canvas>
+
+                    <!-- Hidden canvas for capturing frames to send to the server -->
+                    <canvas id="frameCanvas" style="display: none;"></canvas>
+                    
+                    <!-- Overlay UI elements (like scanning effects) can go here if we want them in CSS -->
+                    <div class="scan-line"></div>
+                </div>
+            </div>
+            
+            <!-- Side Panel / Status Area -->
+            <div class="status-panel">
+                <h2>System Status</h2>
+                
+                <div class="status-card" id="mainStatusCard">
+                    <div class="status-icon" id="statusIcon"></div>
+                    <div class="status-info">
+                        <span class="label">Current Status</span>
+                        <h3 id="statusText">Initializing...</h3>
+                    </div>
+                </div>
+
+                <div class="verification-info" id="verificationInfo">
+                    <h3>Identity</h3>
+                    <div class="id-card">
+                        <div class="id-avatar" id="idAvatar">?</div>
+                        <div class="id-details">
+                            <h4 id="idName">Unknown</h4>
+                            <span class="id-subtitle" id="idScore">Waiting for face...</span>
+                        </div>
+                    </div>
+                    <!-- Personalized Text Greeting -->
+                    <div id="personalizedText" class="personalized-text" style="display: none;"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

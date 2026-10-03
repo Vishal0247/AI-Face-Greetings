@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | AI Greet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dashboard-body">
+    <div class="app-container dashboard-container">
+
+        <!-- LOGIN SCREEN -->
+        <div id="loginScreen" class="login-wrapper">
+            <div class="login-card">
+                <div class="logo" style="justify-content: center; margin-bottom: 20px;">
+                    <div class="dot"></div>
+                    <h1>AI Admin</h1>
+                </div>
+                <p>Please enter the admin password to view enrolled data.</p>
+                <div class="input-group" style="margin-top: 20px;">
+                    <input type="password" id="adminPassword" placeholder="Password">
+                    <button id="loginBtn" class="btn primary">Login</button>
+                </div>
+                <p id="loginError" style="color: #ff6b6b; font-size: 0.85rem; margin-top: 10px; display: none;">
+                    ye sab naii hatttt hurrrr.</p>
+            </div>
+        </div>
+
+        <!-- DASHBOARD CONTENT (Hidden by default) -->
+        <div id="dashboardContent" class="dashboard-content-wrapper" style="display: none;">
+            <header>
+                <div class="logo">
+                    <div class="dot"></div>
+                    <h1>Admin Dashboard</h1>
+                </div>
+                <div class="controls">
+                    <a href="/" class="btn">Back to Scanner</a>
+                </div>
+            </header>
+
+            <!-- Analytics Ribbon -->
+            <section id="analyticsRibbon"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+                <!-- Populated by JS -->
+            </section>
+
+            <div class="dashboard-main"
+                style="display: flex; flex-direction: row; gap: 30px; align-items: flex-start; margin-top: 20px;">
+
+                <!-- Left Column -->
+                <div style="flex: 2; display: flex; flex-direction: column; gap: 30px;">
+                    <!-- Enrolled Identities -->
+                    <div class="dashboard-section enrolled-section" style="width: 100%;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; flex-wrap: wrap; gap: 10px;">
+                            <h2 style="margin: 0;">Enrolled Identities</h2>
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                <input type="text" id="newPersonName" placeholder="Name to add..."
+                                    style="padding: 8px 12px; border-radius: 8px; border: 1px solid #444; background: #222; color: #fff; min-width: 150px;">
+                                <button id="startEnrollBtn" class="btn primary" style="padding: 8px 15px;">🎥 Live
+                                    Enroll</button>
+                                <span style="color: #555; font-size: 0.85rem;">or</span>
+                                <label for="photoUpload" class="btn"
+                                    style="padding: 8px 15px; cursor: pointer; border-color: var(--primary); color: var(--primary);">📷
+                                    Upload Photo</label>
+                                <input type="file" id="photoUpload" accept="image/*" style="display: none;">
+                                <button id="uploadPhotoBtn" class="btn primary"
+                                    style="padding: 8px 15px; display: none;">⬆ Upload</button>
+                            </div>
+                        </div>
+                        <!-- Enrollment / Upload Status Banner -->
+                        <div id="enrollStatus"
+                            style="display: none; padding: 10px 15px; border-radius: 8px; margin-bottom: 10px; font-weight: 600; font-size: 0.9rem;">
+                        </div>
+                        <p>Manage the people the AI is trained to recognize. Add a face via live camera or upload a
+                            photo.</p>
+
+                        <div class="people-grid" id="peopleGrid">
+                            <!-- Populated by JS -->
+                            <div
+                                style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px;">
+                                Loading data...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Scans / Logs -->
+                    <div class="dashboard-section logs-section" style="width: 100%;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <h2 style="margin: 0;">Recent Scans Activity</h2>
+                            <button id="clearLogsBtn" class="btn"
+                                style="padding: 5px 10px; font-size: 0.8rem; border-color: var(--danger); color: var(--danger);">Clear
+                                All Logs</button>
+                        </div>
+                        <p>Auto-recorded short video logs. Click a person's name to view their videos.</p>
+
+                        <div class="logs-container" id="logsGrid"
+                            style="display: flex; flex-direction: column; gap: 30px;">
+                            <!-- Populated by JS -->
+                            <div
+                                style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 40px;">
+                                No recent scans found. Wait for someone to use the camera!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div id="videoModal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; flex-direction: column;">
+        <button onclick="closeModal()"
+            style="position: absolute; top: 20px; right: 30px; background: transparent; border: none; color: white; font-size: 2.5rem; cursor: pointer;">&times;</button>
+        <img id="modalVideo" src=""
+            style="max-width: 90%; max-height: 85vh; object-fit: contain; border-radius: 10px; box-shadow: 0px 10px 30px rgba(0,0,0,0.5);" />
+    </div>
+
+    <!-- Scripts -->
+    <script src="dashboard.js?v=3.1"></script>
+</body>
+
+</html>
