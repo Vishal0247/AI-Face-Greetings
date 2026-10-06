@@ -330,17 +330,18 @@ def cancel_enrollment():
     return jsonify({"success": True})
 
 if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 5000))
     print("==================================================")
-    print("   AI FACE GREETING WEB SERVER STARTED")
-    print("   Open http://127.0.0.1:5000 in your browser")
+    print(f"   AI FACE GREETING WEB SERVER STARTED")
+    print(f"   Listening on port {port}")
     print("==================================================")
     
     try:
         from waitress import serve
         print("   Running in PRODUCTION MODE via Waitress WSGI")
-        serve(app, host='0.0.0.0', port=5000, threads=8)
+        serve(app, host='0.0.0.0', port=port, threads=8)
     except ImportError:
         print("   [WARN] Waitress not installed. Falling back to dev server.")
-        app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+        app.run(host='0.0.0.0', port=port, debug=False, threaded=True)
     finally:
         camera.release()
