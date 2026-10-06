@@ -29,11 +29,6 @@ def index():
     """Serve the main HTML interface."""
     return send_from_directory(frontend_dir, 'index.html')
 
-@app.route('/<path:filename>')
-def serve_static(filename):
-    """Serve CSS, JS, and other static files."""
-    return send_from_directory(frontend_dir, filename)
-
 @app.route('/process_frame', methods=['POST'])
 def process_frame():
     """Receives base64 image from client, processes it, and returns state."""
@@ -328,6 +323,11 @@ def cancel_enrollment():
     """API endpoint to cancel enrollment."""
     camera.enroll_manager.is_enrolling = False
     return jsonify({"success": True})
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    """Serve CSS, JS, and other static files."""
+    return send_from_directory(frontend_dir, filename)
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
