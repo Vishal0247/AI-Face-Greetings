@@ -1,5 +1,10 @@
 import os
-import ctypes
+import platform
+
+# Only import ctypes on Windows where we use winmm for audio playback
+IS_WINDOWS = platform.system() == 'Windows'
+if IS_WINDOWS:
+    import ctypes
 
 class AudioManager:
     def __init__(self, audio_dir="data/audio"):
@@ -28,9 +33,10 @@ class AudioManager:
         if self.current_playing_file is not None:
             print("[AUDIO] Stopping greeting because person left.")
             
-            # Send stop command to Windows Media API
-            ctypes.windll.winmm.mciSendStringW(f'stop "{self.current_playing_file}"', None, 0, None)
-            ctypes.windll.winmm.mciSendStringW(f'close "{self.current_playing_file}"', None, 0, None)
+            if IS_WINDOWS:
+                # Send stop command to Windows Media API
+                ctypes.windll.winmm.mciSendStringW(f'stop "{self.current_playing_file}"', None, 0, None)
+                ctypes.windll.winmm.mciSendStringW(f'close "{self.current_playing_file}"', None, 0, None)
             self.current_playing_file = None
         
     def play_greeting(self, person_name):
@@ -63,7 +69,7 @@ class AudioManager:
                 self.currently_greeted_person = person_name
                 return False
             
-        # 3. Play the audio using native Windows Media API!
+        # 3. Play the audio (only on Windows; on other platforms the web frontend handles playback)
         try:
             print(f"\n==========================================")
             print(f"[AUDIO] Playing personalized greeting for {person_name}!")
@@ -72,14 +78,17 @@ class AudioManager:
             self.currently_greeted_person = person_name
             self.current_playing_file = audio_file
             
-            # Stop any currently playing audio on this file just in case
-            ctypes.windll.winmm.mciSendStringW(f'close "{audio_file}"', None, 0, None)
-            
-            # Play the file using the robust Windows API
-            error_code = ctypes.windll.winmm.mciSendStringW(f'play "{audio_file}"', None, 0, None)
-            
-            if error_code != 0:
-                print(f"[AUDIO] Windows API failed to play file. It might not support this specific format.")
+            if IS_WINDOWS:
+                # Stop any currently playing audio on this file just in case
+                ctypes.windll.winmm.mciSendStringW(f'close "{audio_file}"', None, 0, None)
+                
+                # Play the file using the robust Windows API
+                error_code = ctypes.windll.winmm.mciSendStringW(f'play "{audio_file}"', None, 0, None)
+                
+                if error_code != 0:
+                    print(f"[AUDIO] Windows API failed to play file. It might not support this specific format.")
+            else:
+                print("[AUDIO] Non-Windows platform: audio will be played by the web frontend.")
                 
             return True
         except Exception as e:

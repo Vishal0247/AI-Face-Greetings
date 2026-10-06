@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: ai-face-greeting
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python server.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: ADMIN_PASSWORD
+        value: admin123
+    healthCheckPath: /health

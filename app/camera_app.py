@@ -35,9 +35,9 @@ class CameraApp:
         self.is_recording = False
         self.log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "logs")
         os.makedirs(self.log_dir, exist_ok=True)
-        self.is_recording = False
-        self.video_buffer = []
         self.session_name = "Unknown"
+        self.width = 640
+        self.height = 480
 
     def draw_guide_and_status(self, frame):
         center_x = self.width // 2
@@ -63,6 +63,8 @@ class CameraApp:
             frame = cv2.resize(frame, (640, int(height * scale)))
             
         height, width, _ = frame.shape
+        self.width = width
+        self.height = height
         
         # Initialize or re-initialize if the aspect ratio/device changed (e.g., from laptop landscape to phone portrait)
         if self.quality_checker is None or self.quality_checker.frame_width != width or self.quality_checker.frame_height != height:

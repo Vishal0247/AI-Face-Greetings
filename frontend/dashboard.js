@@ -105,20 +105,33 @@ const uploadNewBtn = document.getElementById('uploadNewBtn');
 const uploadStatus = document.getElementById('uploadStatus');
 
 // Login Logic
-loginBtn.addEventListener('click', () => {
-    // Basic frontend authentication
-    if (adminPassword.value === 'admin123') {
-        loginScreen.style.display = 'none';
-        dashboardContent.style.display = 'block'; // FIXED: was 'flex', causing row layout
-        loadPeople();
-        loadLogs();
-        loadStats();
-        // Auto refresh logs every 5 seconds
-        setInterval(() => {
+loginBtn.addEventListener('click', async () => {
+    // Server-side authentication
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: adminPassword.value })
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+            loginScreen.style.display = 'none';
+            dashboardContent.style.display = 'block';
+            loadPeople();
             loadLogs();
             loadStats();
-        }, 5000);
-    } else {
+            // Auto refresh logs every 5 seconds
+            setInterval(() => {
+                loadLogs();
+                loadStats();
+            }, 5000);
+        } else {
+            loginError.style.display = 'block';
+        }
+    } catch (e) {
+        console.error('Login error:', e);
+        loginError.textContent = 'Error connecting to server.';
         loginError.style.display = 'block';
     }
 });

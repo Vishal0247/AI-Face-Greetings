@@ -19,6 +19,11 @@ app = Flask(__name__, static_folder=frontend_dir)
 # Initialize our AI logic
 camera = CameraApp()
 
+@app.route('/health')
+def health():
+    """Fast health check endpoint for Render — responds instantly."""
+    return jsonify({"status": "ok"}), 200
+
 @app.route('/')
 def index():
     """Serve the main HTML interface."""
